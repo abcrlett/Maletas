@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Checklist de Viaje — Generador</title>
+  <title>Checklist de Viaje — Selector + Checklist</title>
   <style>
     :root { --bg:#0b0d10; --card:#12161c; --text:#e9eef5; --muted:#a9b4c2; --line:#232b36; --accent:#7dd3fc; }
     * { box-sizing: border-box; }
     body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background: linear-gradient(180deg, #07080a, #0b0d10 40%, #0b0d10); color: var(--text); }
-    header { padding: 24px 16px 8px; max-width: 980px; margin: 0 auto; }
+    header { padding: 22px 16px 8px; max-width: 980px; margin: 0 auto; }
     h1 { margin:0 0 8px; font-size: 20px; }
     p { margin:0; color: var(--muted); line-height: 1.5; }
     main { padding: 12px 16px 28px; max-width: 980px; margin: 0 auto; }
@@ -23,21 +23,21 @@
     h2 { font-size: 15px; margin: 0 0 10px; color: var(--accent); }
     h3 { font-size: 13px; margin: 12px 0 6px; color: #cfe8ff; }
     .meta { display:grid; gap: 10px; }
-    @media (min-width: 700px) { .meta { grid-template-columns: repeat(4,1fr); } }
-    label { display:block; font-weight: 700; margin-bottom: 6px; }
+    @media (min-width: 700px) { .meta { grid-template-columns: repeat(3,1fr); } }
+    label { display:block; font-weight: 800; margin-bottom: 6px; }
     select, input[type="text"]{
       width:100%; padding: 10px 10px; border-radius: 10px; border: 1px solid var(--line);
       background: #0f1318; color: var(--text);
     }
-    .toolbar { display:flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+    .row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top: 10px; }
     button {
       appearance:none; border:1px solid var(--line); background: var(--card); color: var(--text);
-      padding: 10px 12px; border-radius: 10px; cursor:pointer; font-weight: 800;
+      padding: 10px 12px; border-radius: 10px; cursor:pointer; font-weight: 900;
     }
     button.primary { border-color: #2b3a4b; background: #101826; }
     button:hover { border-color: #324053; }
-    .grid { display:grid; gap: 10px; }
-    @media (min-width: 880px) { .grid.cols2 { grid-template-columns: 1fr 1fr; } }
+
+    .toolbar { display:flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
     details { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: rgba(0,0,0,0.12); }
     details + details { margin-top: 10px; }
     summary { list-style: none; cursor:pointer; font-weight: 900; display:flex; align-items:center; gap: 10px; user-select:none; }
@@ -45,19 +45,20 @@
     summary .pill { font-size: 12px; padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
     summary .caret { margin-left:auto; opacity: 0.75; }
     details[open] summary .caret { transform: rotate(180deg); }
+    .grid { display:grid; gap: 10px; }
+    @media (min-width: 880px) { .grid.cols2 { grid-template-columns: 1fr 1fr; } }
     .list { margin: 0; padding: 0; list-style: none; }
     .item { display:flex; gap: 10px; align-items:flex-start; padding: 8px 8px; border-top: 1px dashed rgba(35,43,54,0.75); }
     .item:first-child { border-top: 0; }
     input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; }
     .muted { color: var(--muted); }
     .hidden { display:none !important; }
-    .tag { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:2px 10px; font-size:12px; color: var(--muted); margin-left: 6px; }
-    .warn { border-left: 3px solid var(--accent); padding-left: 10px; margin-top: 10px; color: var(--muted); }
-    .row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .tag { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:2px 10px; font-size:12px; color: var(--muted); }
     .divider { height:1px; background: var(--line); margin: 12px 0; opacity: 0.9; }
+
     @media print {
       body { background:#fff; color:#000; }
-      .toolbar, #configCard .warn { display:none; }
+      #selectorCard .row, #selectorCard .muted, .toolbar { display:none; }
       .card, details { box-shadow:none; background:#fff; border:1px solid #ccc; }
       summary .caret { display:none; }
       input[type="checkbox"] { accent-color:#000; }
@@ -67,14 +68,15 @@
 
 <body>
 <header>
-  <h1>✅ Checklist de Viaje — Generador</h1>
-  <p>Primero elige <strong>tipo</strong>, <strong>duración</strong> y <strong>clima</strong>. Luego se despliegan solo las listas que aplican.</p>
+  <h1>✅ Checklist de Viaje</h1>
+  <p>1) Elige el tipo de viaje y aprieta <strong>Listo</strong>. 2) Se despliega el checklist con todo lo que deberías llevar.</p>
 </header>
 
 <main>
-  <!-- CONFIG -->
-  <section class="card" id="configCard">
-    <h2>1) Configuración</h2>
+  <!-- STEP 1: SELECTOR -->
+  <section class="card" id="selectorCard">
+    <h2>1) Tipo de viaje</h2>
+
     <div class="meta">
       <div>
         <label for="tipo">Tipo</label>
@@ -83,6 +85,7 @@
           <option value="int">Internacional</option>
         </select>
       </div>
+
       <div>
         <label for="duracion">Duración</label>
         <select id="duracion">
@@ -91,6 +94,7 @@
           <option value="larga">Larga (8+ noches)</option>
         </select>
       </div>
+
       <div>
         <label for="clima">Clima</label>
         <select id="clima">
@@ -101,160 +105,152 @@
           <option value="nieve">Nieve / Alta montaña</option>
         </select>
       </div>
-      <div>
-        <label for="actividad">Actividades (opcional)</label>
-        <input id="actividad" type="text" placeholder="Ciudad, trabajo, trekking, playa…" />
-      </div>
     </div>
 
-    <div class="row" style="margin-top:12px;">
-      <button class="primary" type="button" onclick="generate()">Generar checklist</button>
-      <span class="muted" id="configSummary"></span>
+    <div class="row">
+      <button class="primary" type="button" onclick="onReady()">Listo</button>
+      <span class="muted" id="selectorSummary"></span>
     </div>
 
-    <div class="warn">
-      Tip: Completa primero <strong>Artículo personal</strong>, luego <strong>Cabina</strong> (plan B), y al final <strong>Bodega</strong>.
-    </div>
-
-    <div class="toolbar" style="margin-top:12px;">
-      <button type="button" onclick="toggleAll(true)" id="btnExpand" class="hidden">Expandir todo</button>
-      <button type="button" onclick="toggleAll(false)" id="btnCollapse" class="hidden">Contraer todo</button>
-      <button type="button" onclick="clearChecks()" id="btnClear" class="hidden">Desmarcar todo</button>
-      <button type="button" onclick="window.print()" id="btnPrint" class="hidden">Imprimir</button>
-    </div>
+    <p class="muted" style="margin-top:10px;">
+      Tip: completa primero <strong>Artículo personal</strong>, luego <strong>Cabina</strong> (plan B), y al final <strong>Bodega</strong>.
+    </p>
   </section>
 
-  <!-- OUTPUT -->
-  <section class="card hidden" id="outputCard">
-    <h2>2) Listas (según tu configuración)</h2>
+  <!-- STEP 2: CHECKLIST -->
+  <section class="card hidden" id="checklistCard">
+    <h2>2) Checklist</h2>
 
     <div class="row">
       <span class="tag" id="tagTipo"></span>
       <span class="tag" id="tagDuracion"></span>
       <span class="tag" id="tagClima"></span>
-      <span class="tag hidden" id="tagActividad"></span>
+    </div>
+
+    <div class="toolbar">
+      <button type="button" onclick="toggleAll(true)">Expandir todo</button>
+      <button type="button" onclick="toggleAll(false)">Contraer todo</button>
+      <button type="button" onclick="clearChecks()">Desmarcar todo</button>
+      <button type="button" onclick="window.print()">Imprimir</button>
     </div>
 
     <div class="divider"></div>
 
-    <!-- EQUIPAJE -->
+    <!-- ARTÍCULO PERSONAL -->
     <details open>
       <summary>🎒 Artículo personal <span class="pill">siempre contigo</span><span class="caret">▼</span></summary>
-
       <div class="grid cols2">
         <div>
           <h3>Documentación + dinero (en mano)</h3>
           <ul class="list">
-            <li class="item"><input type="checkbox" id="ap_doc1"><label for="ap_doc1">Cédula (Chile) / Pasaporte (internacional)</label></li>
-            <li class="item"><input type="checkbox" id="ap_doc2"><label for="ap_doc2">Tarjetas + algo de efectivo</label></li>
-            <li class="item"><input type="checkbox" id="ap_doc3"><label for="ap_doc3">Contacto de emergencia</label></li>
-            <li class="item hidden" id="rowSeguro"><input type="checkbox" id="ap_doc4"><label for="ap_doc4">Seguro de viaje (internacional)</label></li>
-            <li class="item"><input type="checkbox" id="ap_doc5"><label for="ap_doc5">Copias digitales (PDF) en teléfono + correo</label></li>
+            <li class="item"><input type="checkbox" id="ap1"><label for="ap1">Cédula (Chile) / Pasaporte (internacional)</label></li>
+            <li class="item"><input type="checkbox" id="ap2"><label for="ap2">Tarjetas + algo de efectivo</label></li>
+            <li class="item"><input type="checkbox" id="ap3"><label for="ap3">Contacto de emergencia</label></li>
+            <li class="item hidden" id="rowSeguro"><input type="checkbox" id="ap4"><label for="ap4">Seguro de viaje (internacional)</label></li>
+            <li class="item"><input type="checkbox" id="ap5"><label for="ap5">Copias digitales (PDF) en teléfono + correo</label></li>
           </ul>
         </div>
 
         <div>
           <h3>Electrónicos</h3>
           <ul class="list">
-            <li class="item"><input type="checkbox" id="ap_el1"><label for="ap_el1">Teléfono</label></li>
-            <li class="item"><input type="checkbox" id="ap_el2"><label for="ap_el2">Cargador + cable</label></li>
-            <li class="item"><input type="checkbox" id="ap_el3"><label for="ap_el3">Power bank</label></li>
-            <li class="item"><input type="checkbox" id="ap_el4"><label for="ap_el4">Audífonos</label></li>
+            <li class="item"><input type="checkbox" id="ap6"><label for="ap6">Teléfono</label></li>
+            <li class="item"><input type="checkbox" id="ap7"><label for="ap7">Cargador + cable</label></li>
+            <li class="item"><input type="checkbox" id="ap8"><label for="ap8">Power bank</label></li>
+            <li class="item"><input type="checkbox" id="ap9"><label for="ap9">Audífonos</label></li>
           </ul>
         </div>
 
         <div>
           <h3>Artículos personales</h3>
           <ul class="list">
-            <li class="item"><input type="checkbox" id="ap_per1"><label for="ap_per1">Lentes (ópticos/sol) + estuche</label></li>
-            <li class="item"><input type="checkbox" id="ap_per2"><label for="ap_per2">Gel alcohol / pañuelos</label></li>
-            <li class="item"><input type="checkbox" id="ap_per3"><label for="ap_per3">Bálsamo labial</label></li>
-            <li class="item"><input type="checkbox" id="ap_per4"><label for="ap_per4">Snacks</label></li>
-            <li class="item"><input type="checkbox" id="ap_per5"><label for="ap_per5">Botella vacía (para llenar)</label></li>
+            <li class="item"><input type="checkbox" id="ap10"><label for="ap10">Lentes (ópticos/sol) + estuche</label></li>
+            <li class="item"><input type="checkbox" id="ap11"><label for="ap11">Gel alcohol / pañuelos</label></li>
+            <li class="item"><input type="checkbox" id="ap12"><label for="ap12">Bálsamo labial</label></li>
+            <li class="item"><input type="checkbox" id="ap13"><label for="ap13">Snacks</label></li>
+            <li class="item"><input type="checkbox" id="ap14"><label for="ap14">Botella vacía (para llenar)</label></li>
           </ul>
         </div>
 
         <div>
           <h3>Mini botiquín “en mano”</h3>
           <ul class="list">
-            <li class="item"><input type="checkbox" id="ap_med1"><label for="ap_med1">Curitas / parches para ampollas</label></li>
-            <li class="item"><input type="checkbox" id="ap_med2"><label for="ap_med2">Toallitas antisépticas</label></li>
-            <li class="item"><input type="checkbox" id="ap_med3"><label for="ap_med3">Analgésico básico (según indicación)</label></li>
-            <li class="item"><input type="checkbox" id="ap_med4"><label for="ap_med4">Medicamentos personales + receta/indicaciones</label></li>
-            <li class="item"><input type="checkbox" id="ap_med5"><label for="ap_med5">Lista de alergias + contacto médico</label></li>
+            <li class="item"><input type="checkbox" id="ap15"><label for="ap15">Curitas / parches para ampollas</label></li>
+            <li class="item"><input type="checkbox" id="ap16"><label for="ap16">Toallitas antisépticas</label></li>
+            <li class="item"><input type="checkbox" id="ap17"><label for="ap17">Analgésico básico (según indicación)</label></li>
+            <li class="item"><input type="checkbox" id="ap18"><label for="ap18">Medicamentos personales + receta/indicaciones</label></li>
+            <li class="item"><input type="checkbox" id="ap19"><label for="ap19">Lista de alergias + contacto médico</label></li>
           </ul>
           <p class="muted" style="margin:10px 0 0;">Tu botiquín específico lo ajustas con tu médico familiar.</p>
         </div>
       </div>
     </details>
 
-    <details>
+    <!-- CABINA -->
+    <details open>
       <summary>🧳 Maleta de cabina <span class="pill">plan B</span><span class="caret">▼</span></summary>
-
       <div class="grid cols2">
         <div>
-          <h3>Ropa de respaldo</h3>
+          <h3>Ropa de respaldo (según duración)</h3>
           <ul class="list" id="cabinaRopa"></ul>
-          <p class="muted" style="margin:8px 0 0;">* La cantidad cambia según duración.</p>
         </div>
 
         <div>
           <h3>Higiene (formato cabina)</h3>
           <ul class="list">
-            <li class="item"><input type="checkbox" id="cab_hig1"><label for="cab_hig1">Cepillo + pasta</label></li>
-            <li class="item"><input type="checkbox" id="cab_hig2"><label for="cab_hig2">Desodorante</label></li>
-            <li class="item"><input type="checkbox" id="cab_hig3"><label for="cab_hig3">Peine/cepillo</label></li>
-            <li class="item"><input type="checkbox" id="cab_hig4"><label for="cab_hig4">Toallitas húmedas</label></li>
-            <li class="item"><input type="checkbox" id="cab_hig5"><label for="cab_hig5">Bolsas ziplock (líquidos)</label></li>
+            <li class="item"><input type="checkbox" id="ca1"><label for="ca1">Cepillo + pasta</label></li>
+            <li class="item"><input type="checkbox" id="ca2"><label for="ca2">Desodorante</label></li>
+            <li class="item"><input type="checkbox" id="ca3"><label for="ca3">Peine/cepillo</label></li>
+            <li class="item"><input type="checkbox" id="ca4"><label for="ca4">Toallitas húmedas</label></li>
+            <li class="item"><input type="checkbox" id="ca5"><label for="ca5">Bolsas ziplock (líquidos)</label></li>
           </ul>
         </div>
 
         <div>
           <h3>Electrónicos</h3>
           <ul class="list">
-            <li class="item hidden" id="rowAdaptador"><input type="checkbox" id="cab_el1"><label for="cab_el1">Adaptador universal (internacional)</label></li>
-            <li class="item"><input type="checkbox" id="cab_el2"><label for="cab_el2">Cargador múltiple</label></li>
-            <li class="item"><input type="checkbox" id="cab_el3"><label for="cab_el3">Cables extra</label></li>
-            <li class="item"><input type="checkbox" id="cab_el4"><label for="cab_el4">Tablet/Notebook + funda (si llevas)</label></li>
+            <li class="item hidden" id="rowAdaptador"><input type="checkbox" id="ca6"><label for="ca6">Adaptador universal (internacional)</label></li>
+            <li class="item"><input type="checkbox" id="ca7"><label for="ca7">Cargador múltiple</label></li>
+            <li class="item"><input type="checkbox" id="ca8"><label for="ca8">Cables extra</label></li>
+            <li class="item"><input type="checkbox" id="ca9"><label for="ca9">Tablet/Notebook + funda (si llevas)</label></li>
           </ul>
         </div>
 
         <div>
           <h3>Módulo clima (cabina)</h3>
           <ul class="list" id="cabinaClima"></ul>
-          <p class="muted" style="margin:8px 0 0;">* Solo se muestra el módulo del clima elegido.</p>
         </div>
       </div>
     </details>
 
-    <details>
+    <!-- BODEGA -->
+    <details open>
       <summary>🧳 Maleta de bodega <span class="pill">voluminoso</span><span class="caret">▼</span></summary>
-
       <div class="grid cols2">
         <div>
-          <h3>Ropa y calzado extra</h3>
+          <h3>Ropa y calzado (según duración)</h3>
           <ul class="list" id="bodegaRopa"></ul>
         </div>
 
         <div>
           <h3>Higiene full</h3>
           <ul class="list">
-            <li class="item"><input type="checkbox" id="bod_hig1"><label for="bod_hig1">Shampoo / acondicionador / jabón</label></li>
-            <li class="item"><input type="checkbox" id="bod_hig2"><label for="bod_hig2">Crema corporal</label></li>
-            <li class="item"><input type="checkbox" id="bod_hig3"><label for="bod_hig3">Afeitado (si aplica)</label></li>
-            <li class="item"><input type="checkbox" id="bod_hig4"><label for="bod_hig4">Protector solar (si aplica)</label></li>
+            <li class="item"><input type="checkbox" id="bo1"><label for="bo1">Shampoo / acondicionador / jabón</label></li>
+            <li class="item"><input type="checkbox" id="bo2"><label for="bo2">Crema corporal</label></li>
+            <li class="item"><input type="checkbox" id="bo3"><label for="bo3">Afeitado (si aplica)</label></li>
+            <li class="item"><input type="checkbox" id="bo4"><label for="bo4">Protector solar (si aplica)</label></li>
           </ul>
         </div>
 
         <div>
           <h3>Botiquín completo (principal)</h3>
           <ul class="list">
-            <li class="item"><input type="checkbox" id="bod_med1"><label for="bod_med1">Vendas / gasas</label></li>
-            <li class="item"><input type="checkbox" id="bod_med2"><label for="bod_med2">Cinta médica</label></li>
-            <li class="item"><input type="checkbox" id="bod_med3"><label for="bod_med3">Antiséptico</label></li>
-            <li class="item"><input type="checkbox" id="bod_med4"><label for="bod_med4">Termómetro (opcional)</label></li>
-            <li class="item"><input type="checkbox" id="bod_med5"><label for="bod_med5">Repelente (si aplica)</label></li>
-            <li class="item"><input type="checkbox" id="bod_med6"><label for="bod_med6">Medicamentos personales + respaldo (según médico)</label></li>
+            <li class="item"><input type="checkbox" id="bo5"><label for="bo5">Vendas / gasas</label></li>
+            <li class="item"><input type="checkbox" id="bo6"><label for="bo6">Cinta médica</label></li>
+            <li class="item"><input type="checkbox" id="bo7"><label for="bo7">Antiséptico</label></li>
+            <li class="item"><input type="checkbox" id="bo8"><label for="bo8">Termómetro (opcional)</label></li>
+            <li class="item"><input type="checkbox" id="bo9"><label for="bo9">Repelente (si aplica)</label></li>
+            <li class="item"><input type="checkbox" id="bo10"><label for="bo10">Medicamentos personales + respaldo (según médico)</label></li>
           </ul>
         </div>
 
@@ -265,34 +261,30 @@
       </div>
     </details>
 
+    <!-- DOCUMENTOS EXTRA SEGÚN TIPO -->
     <details open>
       <summary>📄 Documentación extra <span class="pill">según tipo</span><span class="caret">▼</span></summary>
       <ul class="list" id="docExtra"></ul>
     </details>
 
+    <!-- EXTRAS PARA DOS -->
     <details open>
       <summary>👥 Extras “para dos” (hombre + mujer) <span class="caret">▼</span></summary>
       <ul class="list">
-        <li class="item"><input type="checkbox" id="dos1"><label for="dos1">1 cargador múltiple + cables (kit compartido)</label></li>
-        <li class="item"><input type="checkbox" id="dos2"><label for="dos2">1 power bank grande</label></li>
-        <li class="item"><input type="checkbox" id="dos3"><label for="dos3">1 paraguas compacto (o 2 si lluvia segura)</label></li>
-        <li class="item"><input type="checkbox" id="dos4"><label for="dos4">1 botiquín principal + mini botiquín cada uno</label></li>
-        <li class="item"><input type="checkbox" id="dos5"><label for="dos5">Bolsa plegable extra (compras/ropa sucia)</label></li>
+        <li class="item"><input type="checkbox" id="d1"><label for="d1">1 cargador múltiple + cables (kit compartido)</label></li>
+        <li class="item"><input type="checkbox" id="d2"><label for="d2">1 power bank grande</label></li>
+        <li class="item"><input type="checkbox" id="d3"><label for="d3">1 paraguas compacto (o 2 si lluvia segura)</label></li>
+        <li class="item"><input type="checkbox" id="d4"><label for="d4">1 botiquín principal + mini botiquín cada uno</label></li>
+        <li class="item"><input type="checkbox" id="d5"><label for="d5">Bolsa plegable extra (compras/ropa sucia)</label></li>
       </ul>
     </details>
-
-    <p class="muted" style="margin:12px 0 0;">
-      Consejo: guarda una copia por viaje (ej: <em>Internacional_Larga_Frio.html</em>).
-    </p>
   </section>
 </main>
 
 <script>
-  // Helpers
   const $ = (id) => document.getElementById(id);
 
   function setVisible(el, visible) {
-    if (!el) return;
     el.classList.toggle('hidden', !visible);
   }
 
@@ -317,14 +309,14 @@
   }
 
   function toggleAll(open) {
-    document.querySelectorAll('#outputCard details').forEach(d => d.open = open);
+    document.querySelectorAll('#checklistCard details').forEach(d => d.open = open);
   }
 
   function clearChecks() {
-    document.querySelectorAll('#outputCard input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('#checklistCard input[type="checkbox"]').forEach(cb => cb.checked = false);
   }
 
-  // Data: duración → ropa base
+  // Data
   const durationMap = {
     corta: {
       cabinaRopa: [
@@ -375,7 +367,6 @@
     }
   };
 
-  // Data: clima → módulo
   const climateMap = {
     calor: {
       cabina: ['Gorro', 'Lentes de sol', 'Bloqueador', 'Repelente (si aplica)'],
@@ -399,7 +390,6 @@
     }
   };
 
-  // Data: tipo → documentación extra
   const docMap = {
     cl: [
       'Reservas/confirmaciones (hotel/bus/avión)',
@@ -422,47 +412,33 @@
     return v === 'calor' ? 'Calor' : v === 'templado' ? 'Templado' : v === 'frio' ? 'Frío' : v === 'lluvia' ? 'Lluvia' : 'Nieve/Alta montaña';
   }
 
-  function generate() {
+  function onReady() {
     const tipo = $('tipo').value;
     const dur = $('duracion').value;
     const cli = $('clima').value;
-    const act = $('actividad').value.trim();
 
-    // Show output + toolbar
-    setVisible($('outputCard'), true);
-    setVisible($('btnExpand'), true);
-    setVisible($('btnCollapse'), true);
-    setVisible($('btnClear'), true);
-    setVisible($('btnPrint'), true);
+    // Show checklist section
+    setVisible($('checklistCard'), true);
 
-    // Summary tags
+    // Tags
     $('tagTipo').textContent = `Tipo: ${humanTipo(tipo)}`;
     $('tagDuracion').textContent = `Duración: ${humanDur(dur)}`;
     $('tagClima').textContent = `Clima: ${humanCli(cli)}`;
-    if (act) {
-      $('tagActividad').textContent = `Actividades: ${act}`;
-      setVisible($('tagActividad'), true);
-    } else {
-      setVisible($('tagActividad'), false);
-    }
+    $('selectorSummary').textContent = `→ Listo: ${humanTipo(tipo)} · ${humanDur(dur)} · ${humanCli(cli)}`;
 
-    $('configSummary').textContent = `→ Generado: ${humanTipo(tipo)} · ${humanDur(dur)} · ${humanCli(cli)}${act ? ' · ' + act : ''}`;
-
-    // Conditional rows (internacional)
+    // Conditional rows
     setVisible($('rowSeguro'), tipo === 'int');
     setVisible($('rowAdaptador'), tipo === 'int');
 
-    // Fill lists based on duration & climate
+    // Fill dynamic lists
     fillList('cabinaRopa', durationMap[dur].cabinaRopa, 'cabR');
     fillList('bodegaRopa', durationMap[dur].bodegaRopa, 'bodR');
-
     fillList('cabinaClima', climateMap[cli].cabina, 'cabC');
     fillList('bodegaClima', climateMap[cli].bodega, 'bodC');
-
     fillList('docExtra', docMap[tipo], 'docX');
 
-    // Optional: auto-scroll to output
-    $('outputCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Scroll to checklist
+    $('checklistCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 </script>
 </body>
