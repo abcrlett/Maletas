@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Checklist de Viaje (Chile/Internacional) — Cabina / Bodega / Artículo personal</title>
+  <style>
+    :root { --bg:#0b0d10; --card:#12161c; --text:#e9eef5; --muted:#a9b4c2; --line:#232b36; --accent:#7dd3fc; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background: linear-gradient(180deg, #07080a, #0b0d10 40%, #0b0d10); color: var(--text); }
+    header { padding: 24px 16px 8px; max-width: 980px; margin: 0 auto; }
+    h1 { margin:0 0 6px; font-size: 20px; }
+    p { margin:0; color: var(--muted); line-height: 1.5; }
+    main { padding: 12px 16px 28px; max-width: 980px; margin: 0 auto; }
+    .toolbar {
+      display:flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px;
+    }
+    button {
+      appearance:none; border:1px solid var(--line); background: var(--card); color: var(--text);
+      padding: 10px 12px; border-radius: 10px; cursor:pointer; font-weight: 600;
+    }
+    button:hover { border-color: #324053; }
+    .card {
+      background: rgba(18,22,28,0.95);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      margin: 10px 0;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+    }
+    details { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: rgba(0,0,0,0.12); }
+    details + details { margin-top: 10px; }
+    summary {
+      list-style: none;
+      cursor:pointer;
+      font-weight: 800;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      user-select:none;
+    }
+    summary::-webkit-details-marker { display:none; }
+    summary .pill {
+      font-size: 12px; padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
+    }
+    summary .caret { margin-left:auto; opacity: 0.7; }
+    details[open] summary .caret { transform: rotate(180deg); }
+    h2 { font-size: 15px; margin: 10px 0 8px; color: var(--accent); }
+    h3 { font-size: 13px; margin: 12px 0 6px; color: #cfe8ff; }
+    .grid { display:grid; gap: 10px; }
+    @media (min-width: 880px) { .grid.cols2 { grid-template-columns: 1fr 1fr; } }
+    .list { margin: 0; padding: 0; list-style: none; }
+    .item {
+      display:flex; gap: 10px; align-items:flex-start;
+      padding: 8px 8px;
+      border-top: 1px dashed rgba(35,43,54,0.75);
+    }
+    .item:first-child { border-top: 0; }
+    input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; }
+    label { line-height: 1.4; color: var(--text); }
+    small.note { color: var(--muted); display:block; margin-top: 6px; }
+    .meta { display:grid; gap: 10px; }
+    @media (min-width: 700px) { .meta { grid-template-columns: repeat(4,1fr); } }
+    .meta select, .meta input[type="text"] {
+      width:100%; padding: 10px 10px; border-radius: 10px; border: 1px solid var(--line);
+      background: #0f1318; color: var(--text);
+    }
+    .footer { color: var(--muted); font-size: 12px; margin-top: 14px; }
+    .warn { border-left: 3px solid var(--accent); padding-left: 10px; margin-top: 10px; color: var(--muted); }
+    @media print {
+      body { background: #fff; color:#000; }
+      .toolbar { display:none; }
+      .card, details { box-shadow:none; background:#fff; border:1px solid #ccc; }
+      summary .caret { display:none; }
+      summary .pill { border-color:#ddd; }
+      input[type="checkbox"] { accent-color: #000; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>✅ Checklist de Viaje (Plantilla plegable)</h1>
+  <p>Usa esta plantilla para <strong>Chile</strong> e <strong>Internacional</strong>, y marca lo que corresponda según <strong>duración</strong> + <strong>clima</strong> + <strong>equipaje</strong>.</p>
+  <p class="warn">Tip: Completa primero <strong>Artículo personal</strong>, luego <strong>Cabina</strong> (plan B), y al final <strong>Bodega</strong>.</p>
+</header>
+
+<main>
+  <div class="toolbar">
+    <button type="button" onclick="toggleAll(true)">Expandir todo</button>
+    <button type="button" onclick="toggleAll(false)">Contraer todo</button>
+    <button type="button" onclick="clearChecks()">Desmarcar todo</button>
+    <button type="button" onclick="window.print()">Imprimir</button>
+  </div>
+
+  <section class="card">
+    <h2>0) Configuración del viaje</h2>
+    <div class="meta">
+      <div>
+        <label for="tipo"><strong>Tipo</strong></label>
+        <select id="tipo">
+          <option>Chile</option>
+          <option>Internacional</option>
+        </select>
+      </div>
+      <div>
+        <label for="duracion"><strong>Duración</strong></label>
+        <select id="duracion">
+          <option>Corta (1–3 noches)</option>
+          <option>Media (4–7 noches)</option>
+          <option>Larga (8+ noches)</option>
+        </select>
+      </div>
+      <div>
+        <label for="clima"><strong>Clima</strong></label>
+        <select id="clima">
+          <option>Calor</option>
+          <option>Templado</option>
+          <option>Frío</option>
+          <option>Lluvia</option>
+          <option>Nieve / Alta montaña</option>
+        </select>
+      </div>
+      <div>
+        <label for="actividades"><strong>Actividades</strong></label>
+        <input id="actividades" type="text" placeholder="Ciudad, trabajo, trekking, playa…" />
+      </div>
+    </div>
+    <small class="note">Puedes escribir el destino en el título del archivo (ej: <em>Checklist_Japon_Feb2026.html</em>).</small>
+  </section>
+
+  <section class="card">
+    <h2>1) Equipaje</h2>
+
+    <details open>
+      <summary>🎒 Artículo personal <span class="pill">siempre contigo</span> <span class="caret">▼</span></summary>
+
+      <div class="grid cols2">
+        <div>
+          <h3>Documentación + dinero (en mano)</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="ap_doc1"><label for="ap_doc1">Cédula (Chile) / Pasaporte (internacional)</label></li>
+            <li class="item"><input type="checkbox" id="ap_doc2"><label for="ap_doc2">Tarjetas + algo de efectivo</label></li>
+            <li class="item"><input type="checkbox" id="ap_doc3"><label for="ap_doc3">Seguro de viaje (si aplica) / contacto de emergencia</label></li>
+            <li class="item"><input type="checkbox" id="ap_doc4"><label for="ap_doc4">Copias digitales (PDF) en teléfono + correo</label></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Electrónicos</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="ap_el1"><label for="ap_el1">Teléfono</label></li>
+            <li class="item"><input type="checkbox" id="ap_el2"><label for="ap_el2">Cargador + cable</label></li>
+            <li class="item"><input type="checkbox" id="ap_el3"><label for="ap_el3">Power bank</label></li>
+            <li class="item"><input type="checkbox" id="ap_el4"><label for="ap_el4">Audífonos</label></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Artículos personales</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="ap_per1"><label for="ap_per1">Lentes (ópticos/sol) + estuche</label></li>
+            <li class="item"><input type="checkbox" id="ap_per2"><label for="ap_per2">Gel alcohol / pañuelos</label></li>
+            <li class="item"><input type="checkbox" id="ap_per3"><label for="ap_per3">Bálsamo labial</label></li>
+            <li class="item"><input type="checkbox" id="ap_per4"><label for="ap_per4">Snacks</label></li>
+            <li class="item"><input type="checkbox" id="ap_per5"><label for="ap_per5">Botella vacía (para llenar)</label></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Mini botiquín “en mano”</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="ap_med1"><label for="ap_med1">Curitas / parches para ampollas</label></li>
+            <li class="item"><input type="checkbox" id="ap_med2"><label for="ap_med2">Toallitas antisépticas</label></li>
+            <li class="item"><input type="checkbox" id="ap_med3"><label for="ap_med3">Analgésico básico (según indicación)</label></li>
+            <li class="item"><input type="checkbox" id="ap_med4"><label for="ap_med4">Medicamentos personales + receta/indicaciones</label></li>
+            <li class="item"><input type="checkbox" id="ap_med5"><label for="ap_med5">Lista de alergias + contacto médico</label></li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>🧳 Maleta de cabina <span class="pill">plan B / acceso rápido</span> <span class="caret">▼</span></summary>
+
+      <div class="grid cols2">
+        <div>
+          <h3>Ropa de respaldo</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="cab_rop1"><label for="cab_rop1">1 muda completa (polera + ropa interior + calcetines)</label></li>
+            <li class="item"><input type="checkbox" id="cab_rop2"><label for="cab_rop2">1 capa extra (polerón o chaqueta liviana)</label></li>
+            <li class="item"><input type="checkbox" id="cab_rop3"><label for="cab_rop3">Pijama liviano (viaje medio/largo)</label></li>
+            <li class="item"><input type="checkbox" id="cab_rop4"><label for="cab_rop4">Traje de baño (si aplica)</label></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Higiene (formato cabina)</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="cab_hig1"><label for="cab_hig1">Cepillo + pasta</label></li>
+            <li class="item"><input type="checkbox" id="cab_hig2"><label for="cab_hig2">Desodorante</label></li>
+            <li class="item"><input type="checkbox" id="cab_hig3"><label for="cab_hig3">Peine/cepillo</label></li>
+            <li class="item"><input type="checkbox" id="cab_hig4"><label for="cab_hig4">Toallitas húmedas</label></li>
+            <li class="item"><input type="checkbox" id="cab_hig5"><label for="cab_hig5">Bloqueador (si aplica)</label></li>
+            <li class="item"><input type="checkbox" id="cab_hig6"><label for="cab_hig6">Maquillaje mínimo (si aplica)</label></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Electrónicos</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="cab_el1"><label for="cab_el1">Adaptador universal (internacional)</label></li>
+            <li class="item"><input type="checkbox" id="cab_el2"><label for="cab_el2">Cargador múltiple</label></li>
+            <li class="item"><input type="checkbox" id="cab_el3"><label for="cab_el3">Cables extra</label></li>
+            <li class="item"><input type="checkbox" id="cab_el4"><label for="cab_el4">Tablet/Notebook + funda (si llevas)</label></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Orden y protección</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="cab_org1"><label for="cab_org1">Bolsas ziplock (líquidos / electrónica)</label></li>
+            <li class="item"><input type="checkbox" id="cab_org2"><label for="cab_org2">Bolsa para ropa sucia</label></li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>🧳 Maleta de bodega <span class="pill">voluminoso</span> <span class="caret">▼</span></summary>
+
+      <div class="grid cols2">
+        <div>
+          <h3>Ropa y calzado extra</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="bod_rop1"><label for="bod_rop1">Zapatillas extra / zapatos (si aplica)</label></li>
+            <li class="item"><input type="checkbox" id="bod_rop2"><label for="bod_rop2">Chaqueta gruesa (si aplica)</label></li>
+            <li class="item"><input type="checkbox" id="bod_rop3"><label for="bod_rop3">Pantalones extra</label></li>
+            <li class="item"><input type="checkbox" id="bod_rop4"><label for="bod_rop4">Bolsa para ropa sucia</label></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Higiene full</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="bod_hig1"><label for="bod_hig1">Shampoo / acondicionador / jabón</label></li>
+            <li class="item"><input type="checkbox" id="bod_hig2"><label for="bod_hig2">Crema corporal</label></li>
+            <li class="item"><input type="checkbox" id="bod_hig3"><label for="bod_hig3">Afeitado (si aplica)</label></li>
+            <li class="item"><input type="checkbox" id="bod_hig4"><label for="bod_hig4">Protector solar tamaño normal (si aplica)</label></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Botiquín completo (principal)</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="bod_med1"><label for="bod_med1">Vendas / gasas</label></li>
+            <li class="item"><input type="checkbox" id="bod_med2"><label for="bod_med2">Cinta médica</label></li>
+            <li class="item"><input type="checkbox" id="bod_med3"><label for="bod_med3">Antiséptico</label></li>
+            <li class="item"><input type="checkbox" id="bod_med4"><label for="bod_med4">Tijeras pequeñas / pinza (según normativa y criterio)</label></li>
+            <li class="item"><input type="checkbox" id="bod_med5"><label for="bod_med5">Bolsa fría instantánea (opcional)</label></li>
+            <li class="item"><input type="checkbox" id="bod_med6"><label for="bod_med6">Termómetro (opcional)</label></li>
+            <li class="item"><input type="checkbox" id="bod_med7"><label for="bod_med7">Repelente (si aplica)</label></li>
+            <li class="item"><input type="checkbox" id="bod_med8"><label for="bod_med8">Medicamentos personales + respaldo (según médico)</label></li>
+          </ul>
+          <small class="note">Si eres propensa a accidentes: deja un <strong>mini botiquín</strong> siempre en el artículo personal, y el completo aquí o en cabina.</small>
+        </div>
+
+        <div>
+          <h3>Extras típicos</h3>
+          <ul class="list">
+            <li class="item"><input type="checkbox" id="bod_ext1"><label for="bod_ext1">Bolsa plegable extra (compras / ropa sucia)</label></li>
+            <li class="item"><input type="checkbox" id="bod_ext2"><label for="bod_ext2">Candado / identificador de maleta (si usas)</label></li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>2) Documentación</h2>
+
+    <details open>
+      <summary>🇨🇱 Chile <span class="pill">viajes dentro del país</span> <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="cl_doc1"><label for="cl_doc1">Cédula vigente</label></li>
+        <li class="item"><input type="checkbox" id="cl_doc2"><label for="cl_doc2">Reservas/confirmaciones (hotel/bus/avión)</label></li>
+        <li class="item"><input type="checkbox" id="cl_doc3"><label for="cl_doc3">Dirección del alojamiento (offline o anotada)</label></li>
+        <li class="item"><input type="checkbox" id="cl_doc4"><label for="cl_doc4">Contacto de emergencia</label></li>
+        <li class="item"><input type="checkbox" id="cl_doc5"><label for="cl_doc5">Medios de pago (tarjetas + efectivo)</label></li>
+        <li class="item"><input type="checkbox" id="cl_doc6"><label for="cl_doc6">bip!/TAG u otros (si aplica)</label></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>🌍 Internacional <span class="pill">check extra</span> <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="int_doc1"><label for="int_doc1">Pasaporte vigente</label></li>
+        <li class="item"><input type="checkbox" id="int_doc2"><label for="int_doc2">Seguro de viaje</label></li>
+        <li class="item"><input type="checkbox" id="int_doc3"><label for="int_doc3">Reservas/confirmaciones</label></li>
+        <li class="item"><input type="checkbox" id="int_doc4"><label for="int_doc4">Dirección del alojamiento (impresa o offline)</label></li>
+        <li class="item"><input type="checkbox" id="int_doc5"><label for="int_doc5">Copias digitales de documentos (PDF)</label></li>
+        <li class="item"><input type="checkbox" id="int_doc6"><label for="int_doc6">Adaptador universal</label></li>
+        <li class="item"><input type="checkbox" id="int_doc7"><label for="int_doc7">E-sim / roaming listo</label></li>
+        <li class="item"><input type="checkbox" id="int_doc8"><label for="int_doc8">Efectivo en moneda local (mínimo)</label></li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>3) Aparatos electrónicos</h2>
+
+    <details open>
+      <summary>🔌 Base <span class="pill">casi siempre</span> <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="elec1"><label for="elec1">Teléfono</label></li>
+        <li class="item"><input type="checkbox" id="elec2"><label for="elec2">Cargador + cable</label></li>
+        <li class="item"><input type="checkbox" id="elec3"><label for="elec3">Power bank</label></li>
+        <li class="item"><input type="checkbox" id="elec4"><label for="elec4">Audífonos</label></li>
+        <li class="item"><input type="checkbox" id="elec5"><label for="elec5">Cargador múltiple (recomendado)</label></li>
+        <li class="item"><input type="checkbox" id="elec6"><label for="elec6">Cables extra (según equipo)</label></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>🎒 Opcionales <span class="pill">según viaje</span> <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="elec7"><label for="elec7">Notebook + cargador</label></li>
+        <li class="item"><input type="checkbox" id="elec8"><label for="elec8">Tablet + cargador</label></li>
+        <li class="item"><input type="checkbox" id="elec9"><label for="elec9">Cámara + batería</label></li>
+        <li class="item"><input type="checkbox" id="elec10"><label for="elec10">Kindle/lector</label></li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>4) Artículos personales</h2>
+
+    <details open>
+      <summary>🧼 Higiene y cuidado <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="per1"><label for="per1">Cepillo + pasta</label></li>
+        <li class="item"><input type="checkbox" id="per2"><label for="per2">Desodorante</label></li>
+        <li class="item"><input type="checkbox" id="per3"><label for="per3">Crema hidratante</label></li>
+        <li class="item"><input type="checkbox" id="per4"><label for="per4">Bálsamo labial</label></li>
+        <li class="item"><input type="checkbox" id="per5"><label for="per5">Peine/cepillo</label></li>
+        <li class="item"><input type="checkbox" id="per6"><label for="per6">Afeitado (si aplica)</label></li>
+        <li class="item"><input type="checkbox" id="per7"><label for="per7">Maquillaje (si aplica)</label></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>😌 Confort <span class="pill">opcional</span> <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="conf1"><label for="conf1">Tapones de oído / antifaz</label></li>
+        <li class="item"><input type="checkbox" id="conf2"><label for="conf2">Cuello de viaje</label></li>
+        <li class="item"><input type="checkbox" id="conf3"><label for="conf3">Toallitas húmedas / pañuelos</label></li>
+        <li class="item"><input type="checkbox" id="conf4"><label for="conf4">Snacks</label></li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>5) Botiquín</h2>
+
+    <details open>
+      <summary>🩹 Mini botiquín (artículo personal) <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="medm1"><label for="medm1">Curitas</label></li>
+        <li class="item"><input type="checkbox" id="medm2"><label for="medm2">Parches para ampollas</label></li>
+        <li class="item"><input type="checkbox" id="medm3"><label for="medm3">Toallitas antisépticas</label></li>
+        <li class="item"><input type="checkbox" id="medm4"><label for="medm4">Analgésico básico (según indicación)</label></li>
+        <li class="item"><input type="checkbox" id="medm5"><label for="medm5">Medicamentos personales (con receta/indicaciones)</label></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>🧰 Botiquín completo (cabina/bodega) <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="medc1"><label for="medc1">Vendas / gasas</label></li>
+        <li class="item"><input type="checkbox" id="medc2"><label for="medc2">Cinta médica</label></li>
+        <li class="item"><input type="checkbox" id="medc3"><label for="medc3">Antiséptico</label></li>
+        <li class="item"><input type="checkbox" id="medc4"><label for="medc4">Repelente (si aplica)</label></li>
+        <li class="item"><input type="checkbox" id="medc5"><label for="medc5">Termómetro (opcional)</label></li>
+        <li class="item"><input type="checkbox" id="medc6"><label for="medc6">Bolsa fría instantánea (opcional)</label></li>
+        <li class="item"><input type="checkbox" id="medc7"><label for="medc7">Medicamentos personales + respaldo (según médico)</label></li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>6) Ropa (por duración, por persona)</h2>
+
+    <details open>
+      <summary>🕒 Corta (1–3 noches) <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="r_c1"><label for="r_c1">Ropa interior: 3–4</label></li>
+        <li class="item"><input type="checkbox" id="r_c2"><label for="r_c2">Calcetines: 3–4</label></li>
+        <li class="item"><input type="checkbox" id="r_c3"><label for="r_c3">Poleras: 3</label></li>
+        <li class="item"><input type="checkbox" id="r_c4"><label for="r_c4">Pantalones: 1–2</label></li>
+        <li class="item"><input type="checkbox" id="r_c5"><label for="r_c5">Capa extra: 1</label></li>
+        <li class="item"><input type="checkbox" id="r_c6"><label for="r_c6">Pijama: 1</label></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>📅 Media (4–7 noches) <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="r_m1"><label for="r_m1">Ropa interior: 6–8</label></li>
+        <li class="item"><input type="checkbox" id="r_m2"><label for="r_m2">Calcetines: 6–8</label></li>
+        <li class="item"><input type="checkbox" id="r_m3"><label for="r_m3">Poleras: 5–7</label></li>
+        <li class="item"><input type="checkbox" id="r_m4"><label for="r_m4">Pantalones: 2–3</label></li>
+        <li class="item"><input type="checkbox" id="r_m5"><label for="r_m5">Capas: 1–2</label></li>
+        <li class="item"><input type="checkbox" id="r_m6"><label for="r_m6">Pijama: 1–2</label></li>
+        <li class="item"><input type="checkbox" id="r_m7"><label for="r_m7">Outfit formal (si aplica)</label></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>🗓️ Larga (8+ noches) <span class="pill">con plan de lavado</span> <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="r_l1"><label for="r_l1">Ropa interior: 7–10</label></li>
+        <li class="item"><input type="checkbox" id="r_l2"><label for="r_l2">Calcetines: 7–10</label></li>
+        <li class="item"><input type="checkbox" id="r_l3"><label for="r_l3">Poleras: 7–10</label></li>
+        <li class="item"><input type="checkbox" id="r_l4"><label for="r_l4">Pantalones: 3–4</label></li>
+        <li class="item"><input type="checkbox" id="r_l5"><label for="r_l5">Capas: 2–3</label></li>
+        <li class="item"><input type="checkbox" id="r_l6"><label for="r_l6">Pijama: 2</label></li>
+        <li class="item"><input type="checkbox" id="r_l7"><label for="r_l7">Kit lavandería (jabón + pinzas) opcional</label></li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>7) Módulos por clima (agrega según corresponda)</h2>
+
+    <details open>
+      <summary>☀️ Calor <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="cal1"><label for="cal1">Poleras livianas extra</label></li>
+        <li class="item"><input type="checkbox" id="cal2"><label for="cal2">Short/falda (si aplica)</label></li>
+        <li class="item"><input type="checkbox" id="cal3"><label for="cal3">Sandalias (si aplica)</label></li>
+        <li class="item"><input type="checkbox" id="cal4"><label for="cal4">Gorro</label></li>
+        <li class="item"><input type="checkbox" id="cal5"><label for="cal5">Lentes de sol</label></li>
+        <li class="item"><input type="checkbox" id="cal6"><label for="cal6">Bloqueador</label></li>
+        <li class="item"><input type="checkbox" id="cal7"><label for="cal7">Repelente (si aplica)</label></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>🌤️ Templado <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="temp1"><label for="temp1">Chaqueta liviana</label></li>
+        <li class="item"><input type="checkbox" id="temp2"><label for="temp2">Polerón/polar</label></li>
+        <li class="item"><input type="checkbox" id="temp3"><label for="temp3">Pantalón cómodo</label></li>
+        <li class="item"><input type="checkbox" id="temp4"><label for="temp4">Zapatillas cerradas</label></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>❄️ Frío <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="fr1"><label for="fr1">Parka/abrigo</label></li>
+        <li class="item"><input type="checkbox" id="fr2"><label for="fr2">Primera capa térmica</label></li>
+        <li class="item"><input type="checkbox" id="fr3"><label for="fr3">Polar/polerón</label></li>
+        <li class="item"><input type="checkbox" id="fr4"><label for="fr4">Gorro + bufanda</label></li>
+        <li class="item"><input type="checkbox" id="fr5"><label for="fr5">Guantes</label></li>
+        <li class="item"><input type="checkbox" id="fr6"><label for="fr6">Calcetines gruesos</label></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>🌧️ Lluvia <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="llu1"><label for="llu1">Chaqueta impermeable/cortaviento</label></li>
+        <li class="item"><input type="checkbox" id="llu2"><label for="llu2">Paraguas compacto</label></li>
+        <li class="item"><input type="checkbox" id="llu3"><label for="llu3">Funda impermeable mochila</label></li>
+        <li class="item"><input type="checkbox" id="llu4"><label for="llu4">Bolsas ziplock (ropa mojada/electrónicos)</label></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>🏔️ Nieve / alta montaña <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="nie1"><label for="nie1">Calzado adecuado</label></li>
+        <li class="item"><input type="checkbox" id="nie2"><label for="nie2">Capas térmicas extra</label></li>
+        <li class="item"><input type="checkbox" id="nie3"><label for="nie3">Cuello/buff</label></li>
+        <li class="item"><input type="checkbox" id="nie4"><label for="nie4">Protector solar</label></li>
+        <li class="item"><input type="checkbox" id="nie5"><label for="nie5">Bálsamo labial extra</label></li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>8) Extras “para dos” (hombre + mujer)</h2>
+    <details open>
+      <summary>👥 Compartido <span class="caret">▼</span></summary>
+      <ul class="list">
+        <li class="item"><input type="checkbox" id="dos1"><label for="dos1">1 cargador múltiple + cables (kit compartido)</label></li>
+        <li class="item"><input type="checkbox" id="dos2"><label for="dos2">1 power bank grande</label></li>
+        <li class="item"><input type="checkbox" id="dos3"><label for="dos3">1 paraguas compacto (o 2 si lluvia segura)</label></li>
+        <li class="item"><input type="checkbox" id="dos4"><label for="dos4">1 botiquín principal + mini botiquín cada uno</label></li>
+        <li class="item"><input type="checkbox" id="dos5"><label for="dos5">Bolsa extra plegable (compras/ropa sucia)</label></li>
+      </ul>
+    </details>
+
+    <div class="footer">
+      Consejo: guarda este archivo y duplica la copia por viaje (ej: “Chile_Corta_Templado.html” / “Internacional_Larga_Frio.html”).
+    </div>
+  </section>
+</main>
+
+<script>
+  function toggleAll(open) {
+    document.querySelectorAll('details').forEach(d => d.open = open);
+  }
+  function clearChecks() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+  }
+</script>
+</body>
+</html>
